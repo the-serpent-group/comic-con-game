@@ -4,6 +4,6 @@
 
 # Challenge Task : Challenge 5 - Event Management.
 
-### ** Details of Game Concept **
+### **Details of Game Concept**
 
 
