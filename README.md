@@ -20,6 +20,6 @@ Neurologically thought has been brought into how players could react though stim
 
 
 
-### _ Audiences:  _  
+### _Audiences:_  
 
 
