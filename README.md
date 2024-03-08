@@ -27,5 +27,7 @@ Neurologically thought has been brought into how players could react though stim
 -
 
 ----
+@octocat :+1: This PR looks great - it's ready to merge! :shipit:
+
 
 + @octocat REMINDERS DO NOT CHANGE THROUGH TERMINAL PUSH OR COMMIT UNTIL (CHANGE/PUSH) VERIFICATION HAS BEEN SET UP 
