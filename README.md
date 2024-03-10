@@ -1,7 +1,7 @@
 ﻿# Comic Con Game
 Authors/developers of game: 
-+ 
-+
+-
+-
 
 ## For KV6002 
 
