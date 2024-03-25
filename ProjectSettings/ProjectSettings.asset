@@ -858,11 +858,11 @@ PlayerSettings:
   apiCompatibilityLevel: 6
   activeInputHandler: 0
   windowsGamepadBackendHint: 0
-  cloudProjectId: aaad5a3a-28bd-435c-bdeb-156f7c80499f
+  cloudProjectId: 
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: comic_con_game
-  organizationId: 0d466d3-f84c-4e09-a5d6-7d1a63cf6d86
+  projectName: 
+  organizationId: 
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   hmiLoadingImage: {fileID: 0}

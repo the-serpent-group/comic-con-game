@@ -559,7 +559,7 @@ SpriteRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1930372017139598639}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -1012,7 +1012,6 @@ GameObject:
   - component: {fileID: 8084074496951723249}
   - component: {fileID: 8704635381143378784}
   - component: {fileID: 7182406334270739881}
-  - component: {fileID: 6555653635427065371}
   - component: {fileID: 3940489037450572258}
   m_Layer: 0
   m_Name: Stand 1
@@ -1134,18 +1133,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.75, y: 0.75}
   m_EdgeRadius: 0
---- !u!114 &6555653635427065371
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7560724981716515776}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 66ef47891c049e647996b9e66ca82141, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &3940489037450572258
 MonoBehaviour:
   m_ObjectHideFlags: 0

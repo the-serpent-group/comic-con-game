@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 8021139276553901474}
   - component: {fileID: 6379439525875109645}
   - component: {fileID: 2061474030576026945}
-  - component: {fileID: 8082995635642703771}
   - component: {fileID: 4762591807823790654}
   m_Layer: 0
   m_Name: Stand 1
@@ -133,18 +132,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.75, y: 0.75}
   m_EdgeRadius: 0
---- !u!114 &8082995635642703771
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1597319899630206082}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 66ef47891c049e647996b9e66ca82141, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &4762591807823790654
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -582,7 +569,7 @@ SpriteRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3412125175481837436}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
