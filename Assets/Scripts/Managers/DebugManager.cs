@@ -20,6 +20,14 @@ public class DebugManager : MonoBehaviour
             {
                 GameObject.Find("LevelManager").GetComponent<LevelManager>().ProgressDay();
             }
+            if (Input.GetKeyDown(KeyCode.KeypadPlus))
+            {
+                GameObject.Find("Grid").GetComponent<GridManager>().upgradeMap();
+            }
+            if (Input.GetKeyDown(KeyCode.KeypadMinus))
+            {
+                GameObject.Find("Grid").GetComponent<GridManager>().downgradeMap();
+            }
         }
     }
 }

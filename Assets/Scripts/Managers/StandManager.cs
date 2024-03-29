@@ -51,7 +51,7 @@ public class StandManager : MonoBehaviour
 
         foreach (var pair in colorCategoryMap)
         {
-            Debug.Log($"Color {pair.Key} is mapped to category {pair.Value}");
+           // // Debug.Log($"Color {pair.Key} is mapped to category {pair.Value}");
         }
 
     }
@@ -120,7 +120,7 @@ public class StandManager : MonoBehaviour
     {
         if (heldStand == null)
         {
-            Debug.LogError("heldStand is not assigned.");
+            // Debug.LogError("heldStand is not assigned.");
             return;
         }
 
@@ -129,13 +129,13 @@ public class StandManager : MonoBehaviour
 
         if (standController == null || spriteRenderer == null)
         {
-            Debug.LogError("heldStand does not have the necessary components.");
+            // Debug.LogError("heldStand does not have the necessary components.");
             return;
         }
 
         if (!standController.validateStands(ErrorSprite))
         {
-            Debug.LogError("Stand validation failed.");
+            // Debug.LogError("Stand validation failed.");
             return;
         }
 
@@ -148,18 +148,18 @@ public class StandManager : MonoBehaviour
         string standCategory = standController.StandCategory;
         if (string.IsNullOrEmpty(standCategory))
         {
-            Debug.LogError("Stand category is null or empty.");
+            // Debug.LogError("Stand category is null or empty.");
             return;
         }
 
-        Debug.Log($"Placing stand with category: {standCategory}");
+        // Debug.Log($"Placing stand with category: {standCategory}");
         activeStandList.AddRange(standController.fetchTileStrings());
 
         GameObject placedStand = Instantiate(heldStand, placementGrid.transform);
         placedStand.transform.position = placementPreview.transform.position;
         placedStand.GetComponent<StandController>().updateColor(-1f, -1f, -1f, 1f);
 
-        Debug.Log("Placed Stand Category: " + standCategory);
+        // Debug.Log("Placed Stand Category: " + standCategory);
 
         NextStand();
     }
@@ -183,7 +183,7 @@ public class StandManager : MonoBehaviour
 
             if (newStandController == null || newSpriteRenderer == null)
             {
-                Debug.LogError("New preview does not have the necessary components.");
+                // Debug.LogError("New preview does not have the necessary components.");
                 return;
             }
 
@@ -192,7 +192,7 @@ public class StandManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("No more stands available in the queue.");
+            // Debug.Log("No more stands available in the queue.");
         }
     }
     private void AddColorToMap(Color color, string category)
@@ -200,11 +200,11 @@ public class StandManager : MonoBehaviour
         if (!colorCategoryMap.ContainsKey(color)) 
         {
             colorCategoryMap.Add(color, category);
-            Debug.Log($"Color {color} is mapped to category {category}");
+            // Debug.Log($"Color {color} is mapped to category {category}");
         }
         else
         {
-            Debug.LogError($"Attempted to add duplicate color key to map: {color}");
+            // Debug.LogError($"Attempted to add duplicate color key to map: {color}");
         }
     }
 
