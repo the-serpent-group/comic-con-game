@@ -7,8 +7,17 @@ using UnityEngine;
 public class DebugManager : MonoBehaviour
 {
 
+    GridManager gridManager;
+    LevelManager levelManager;
+
     [SerializeField] // This is here so that there is no need to enable debug mode via Konami Code in editor.
     private bool isDebugEnabled = false;
+
+    private void Start()
+    {
+        gridManager = GameObject.Find("GridManager").GetComponent<GridManager>();
+        levelManager = GameObject.Find("LevelManager").GetComponent<LevelManager>();
+    }
 
     void Update()
     {
@@ -16,18 +25,37 @@ public class DebugManager : MonoBehaviour
         {
             // Add Future Debug Code Here   ||
             //                              \/
-            if (Input.GetKeyDown(KeyCode.Keypad9))
-            {
-                GameObject.Find("LevelManager").GetComponent<LevelManager>().ProgressDay();
-            }
-            if (Input.GetKeyDown(KeyCode.KeypadPlus))
-            {
-                GameObject.Find("Grid").GetComponent<GridManager>().upgradeMap();
-            }
-            if (Input.GetKeyDown(KeyCode.KeypadMinus))
-            {
-                GameObject.Find("Grid").GetComponent<GridManager>().downgradeMap();
-            }
+            if (Input.GetKeyDown(KeyCode.Keypad9)) levelManager.ProgressDay();
+            if (Input.GetKeyDown(KeyCode.KeypadPlus)) gridManager.upgradeMap();
+            if (Input.GetKeyDown(KeyCode.KeypadMinus)) gridManager.downgradeMap();
+        }
+    }
+
+    public GameObject Debug_Killer;
+    public GameObject Debug_Spawner;
+
+    private void FixedUpdate()
+    {
+        GameObject Debug_Killer_Ref = GameObject.Find("Debug_Killer(Clone)");
+        if (isDebugEnabled == true)
+        {
+            if (!Debug_Killer_Ref) Instantiate(Debug_Killer).transform.position = gridManager.killerOffsetPosition;
+            else Debug_Killer_Ref.transform.position = gridManager.killerOffsetPosition;
+        }
+        if (isDebugEnabled != true)
+        {
+            if (Debug_Killer_Ref != null) Destroy(GameObject.Find("Debug_Killer(Clone)"));
+        }
+
+        GameObject Debug_Spawner_Ref = GameObject.Find("Debug_Spawner(Clone)");
+        if (isDebugEnabled == true)
+        {
+            if (!Debug_Spawner_Ref) Instantiate(Debug_Spawner).transform.position = gridManager.spawnerOffsetPosition;
+            else Debug_Spawner_Ref.transform.position = gridManager.spawnerOffsetPosition;
+        }
+        if (isDebugEnabled != true)
+        {
+            if (Debug_Spawner_Ref != null) Destroy(GameObject.Find("Debug_Spawner(Clone)"));
         }
     }
 }

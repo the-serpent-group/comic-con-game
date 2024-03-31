@@ -43,7 +43,7 @@ public class LevelManager : MonoBehaviour
 
     // // Lights
     Light2D globalLight;
-    Vector2[] globalLightSettings =
+    public Vector2[] globalLightSettings =
     {
         // X - Falloff Strength
         // Y - Falloff
