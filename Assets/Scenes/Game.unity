@@ -1036,6 +1036,11 @@ MonoBehaviour:
   - {fileID: 21300000, guid: b48d62230b794b64ca9880ac8395768b, type: 3}
   - {fileID: 21300000, guid: dd9d07aa84dcbc345853975e8ff20924, type: 3}
   - {fileID: 21300000, guid: 3cf9bf37a0bd86d4cae424da118ce290, type: 3}
+  globalLightSettings:
+  - {x: 0.7, y: 15}
+  - {x: 0.2, y: 20}
+  - {x: 0.7, y: 15}
+  - {x: 1, y: 15}
   UICounterText: {fileID: 0}
 --- !u!1 &790838485
 GameObject:
@@ -12910,7 +12915,7 @@ GameObject:
   m_Layer: 0
   m_Name: GridManager
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 6519382022992737161, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -12965,9 +12970,9 @@ MonoBehaviour:
   - {x: 12, y: 8}
   - {x: 16, y: 10}
   - {x: 20, y: 10}
-  spawnOffset: 10
-  entryOffsetPosition: {x: 0, y: 0, z: 0}
-  exitOffsetPosition: {x: 0, y: 0, z: 0}
+  spawnOffset: 15
+  spawnerOffsetPosition: {x: 0, y: 0, z: 0}
+  killerOffsetPosition: {x: 0, y: 0, z: 0}
   maxTier: 5
   minTier: 0
   smartFloorArr:
