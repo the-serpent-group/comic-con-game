@@ -16,6 +16,12 @@ public class GridManager : MonoBehaviour
     private Vector2Int[] mapSizes; // X = Width ; Y = height ; Should be `n % 2 = 0`
 
 
+    //Spawn Offset
+    public int spawnOffset = 10;
+    public Vector3 spawnerOffsetPosition = Vector3.zero;
+    public Vector3 killerOffsetPosition = Vector3.zero;
+
+
     //Tiers
     public int maxTier = 5;
     public int minTier = 0;
@@ -25,8 +31,7 @@ public class GridManager : MonoBehaviour
     public TileBase[] smartFloorArr;
     public TileBase[] smartRoofArr;
     public TileBase[] smartWallArr;
-    public Vector3Int tilemapOrigin;
-    public Vector3Int tilemapSize;
+    public TileBase smartAsph;
 
 
     // Start is called before the first frame update
@@ -40,8 +45,6 @@ public class GridManager : MonoBehaviour
         if (smartWallArr.Length != maxTier) throw new Exception("smartWall is larger than array of mapSizes");
 
         findTilemaps();
-        tilemapOrigin = floorTilemap.origin;
-        tilemapSize = floorTilemap.size;
         regenerateMap();
     }
 
@@ -75,6 +78,7 @@ public class GridManager : MonoBehaviour
     /// <summary>
     /// General function to regenerate the play map.
     /// The offsets were made via trial and error.
+    /// DO NOT FUCKING TOUCH.
     /// </summary>
     private void regenerateMap()
     {
@@ -86,10 +90,12 @@ public class GridManager : MonoBehaviour
         TileBase smartFloor = smartFloorArr[currentTier];
         TileBase smartWall = smartWallArr[currentTier];
         TileBase smartRoof = smartRoofArr[currentTier];
+        TileBase smartAsphalt = smartAsph;
 
         int wallHeight = 3;
         int wallWidth = 2;
 
+        #region Hardcoded Generation
         //Main - Floor
         setTiles(
             floorTilemap,
@@ -98,6 +104,7 @@ public class GridManager : MonoBehaviour
             smartFloor
         );
 
+        #region Top
         //Top - Roof
         setTiles(
             wallTilemap,
@@ -114,21 +121,25 @@ public class GridManager : MonoBehaviour
             smartWall
         );
 
-        //Right - Roof
+        #endregion
+        #region Left
+        //Left - Roof
         setTiles(
             wallTilemap,
             new Vector2Int(topCorner.x - wallWidth, topCorner.y + wallHeight),
-            new Vector2Int(topCorner.x, botCorner.y + wallHeight),
+            new Vector2Int(topCorner.x, botCorner.y + wallHeight + 1),
             smartRoof
         );
-        //Right - Wall
+
+        //Left - Wall
         setTiles(
             wallTilemap,
             new Vector2Int(topCorner.x - wallWidth, botCorner.y + wallHeight - 1),
             new Vector2Int(topCorner.x, botCorner.y + 2),
             smartWall
         );
-        //Right - Floor
+
+        //Left - Floor
         setTiles(
             floorTilemap,
             new Vector2Int(topCorner.x - wallWidth, botCorner.y),
@@ -136,35 +147,71 @@ public class GridManager : MonoBehaviour
             smartFloor
         );
 
-        //Left - Roof
+        //Left - Asphalt
+        setTiles(
+            floorTilemap,
+            new Vector2Int(topCorner.x - wallWidth - 1, botCorner.y),
+            new Vector2Int(topCorner.x - 20, botCorner.y - 1),
+            smartAsphalt
+        );
+
+        killerOffsetPosition = new Vector3(topCorner.x - spawnOffset + 0.5f, botCorner.y - 1 + 0.5f, 0);
+
+        #endregion
+        #region Right
+        //Right - Roof
         setTiles(
             wallTilemap,
             new Vector2Int(botCorner.x, topCorner.y + wallHeight),
-            new Vector2Int(botCorner.x + wallWidth, botCorner.y + wallHeight),
+            new Vector2Int(botCorner.x + wallWidth, botCorner.y + wallHeight + 1),
             smartRoof
         );
-        //Left - Wall
+
+        //Right - Wall
         setTiles(
             wallTilemap,
             new Vector2Int(botCorner.x, botCorner.y + wallHeight - 1),
             new Vector2Int(botCorner.x + wallWidth, botCorner.y + 2),
             smartWall
         );
-        //Left - Floor
+
+        //Right - Floor
         setTiles(
             floorTilemap,
             new Vector2Int(botCorner.x, botCorner.y),
             new Vector2Int(botCorner.x + wallWidth, botCorner.y - 1),
             smartFloor
         );
-        //Bot - Roof
+
+        //Right - Asphalt
+        setTiles(
+            floorTilemap,
+            new Vector2Int(botCorner.x + wallWidth, botCorner.y),
+            new Vector2Int(botCorner.x + 20, botCorner.y - 1),
+            smartAsphalt
+        );
+
+        spawnerOffsetPosition = new Vector3(botCorner.x + spawnOffset - 0.5f, botCorner.y - 1 + 0.5f, 0);
+
+        #endregion
+        #region Bottom
+        //Bottom - Roof
         setTiles(
             wallTilemap,
             new Vector2Int(topCorner.x - wallWidth, botCorner.y - 3),
             new Vector2Int(botCorner.x + wallWidth, botCorner.y - wallHeight - 1),
             smartRoof
         );
-
+        
+        //Bottom - Wall
+        setTiles(
+            wallTilemap,
+            new Vector2Int(topCorner.x - wallWidth, botCorner.y - wallHeight - 2),
+            new Vector2Int(botCorner.x + wallWidth, botCorner.y - wallHeight * 2),
+            smartWall
+        );
+        #endregion
+        #endregion
 
 
     }
