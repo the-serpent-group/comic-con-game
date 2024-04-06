@@ -1,22 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class Cursor_Controller : MonoBehaviour
-{
-    public Camera playerCamera;
-    // Start is called before the first frame update
-    void Start()
-    {
-
-
-    }
-    
-
-    private void FixedUpdate()
-    {
-        Vector3 cursorPos = Input.mousePosition;
-        Vector3 cursorCamPos = playerCamera.ScreenToWorldPoint(cursorPos);
-        this.transform.position = new Vector3(Mathf.RoundToInt(cursorCamPos.x), Mathf.RoundToInt(cursorCamPos.y), -1);
-    }
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:0877ca0f5674fa426154e16233fa0a3139fa833f0d8ec77b75214bef333c194c
+size 561

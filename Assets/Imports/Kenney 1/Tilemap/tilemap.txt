@@ -1,6 +1,3 @@
-
-  Tile width :	16px
-  Tile height:	16px
-
-  Margin:	0px
-  Spacing:	1px
+version https://git-lfs.github.com/spec/v1
+oid sha256:b6142c8a794739ae91e6ee0e6c4c4958c4139b9298579015a65864b6a127bc2e
+size 70
