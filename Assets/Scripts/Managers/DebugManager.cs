@@ -9,6 +9,7 @@ public class DebugManager : MonoBehaviour
 
     GridManager gridManager;
     LevelManager levelManager;
+    MoneyManager moneyManager;
 
     [SerializeField] // This is here so that there is no need to enable debug mode via Konami Code in editor.
     private bool isDebugEnabled = false;
@@ -17,6 +18,7 @@ public class DebugManager : MonoBehaviour
     {
         gridManager = GameObject.Find("GridManager").GetComponent<GridManager>();
         levelManager = GameObject.Find("LevelManager").GetComponent<LevelManager>();
+        moneyManager = GameObject.Find("MoneyManager").GetComponent<MoneyManager>();
     }
 
     void Update()
@@ -25,6 +27,8 @@ public class DebugManager : MonoBehaviour
         {
             // Add Future Debug Code Here   ||
             //                              \/
+            if (Input.GetKeyDown(KeyCode.Keypad2)) moneyManager.AddMoney(-100);
+            if (Input.GetKeyDown(KeyCode.Keypad8)) moneyManager.AddMoney(100);
             if (Input.GetKeyDown(KeyCode.Keypad9)) levelManager.ProgressDay();
             if (Input.GetKeyDown(KeyCode.KeypadPlus)) gridManager.upgradeMap();
             if (Input.GetKeyDown(KeyCode.KeypadMinus)) gridManager.downgradeMap();
