@@ -17,12 +17,25 @@ public class Settings_Manager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        mainMenuTransitions = GameObject.Find("FillerCanvas").GetComponent<MainMenuTransitions>();
+        GameObject mainMenuTransitionsObject = GameObject.Find("FillerCanvas");
+        if (mainMenuTransitionsObject != null)
+        {
+            mainMenuTransitions = mainMenuTransitionsObject.GetComponent<MainMenuTransitions>();
+        }
+        else
+        {
+            finishedSetup = true;
+        }
         int settingSet = PlayerPrefs.GetInt("SettingSet", -1);
         if (settingSet != -1)
         {
             Destroy(dyslexiaSettings);
             finishedSetup = true;
+            updateSettings();
+        }
+        else
+        {
+
         }
     }
 
@@ -78,7 +91,15 @@ public class Settings_Manager : MonoBehaviour
 
     void updateSettings()
     {
-        if (PlayerPrefs.GetInt("DyslexicFont") == 1) foreach (var text in Resources.FindObjectsOfTypeAll<TextMeshProUGUI>()) text.font = dyslexicFont;
-        else foreach (var text in Resources.FindObjectsOfTypeAll<TextMeshProUGUI>()) text.font = fancyFont;
+        if (PlayerPrefs.GetInt("DyslexicFont") == 1)
+            foreach (var text in Resources.FindObjectsOfTypeAll<TextMeshProUGUI>())
+            {
+                text.font = dyslexicFont;
+            }
+        else
+            foreach (var text in Resources.FindObjectsOfTypeAll<TextMeshProUGUI>())
+            {
+                text.font = fancyFont;
+            }
     }
 }
