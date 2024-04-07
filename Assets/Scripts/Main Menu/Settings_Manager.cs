@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Settings_Manager : MonoBehaviour
 {
@@ -91,6 +92,7 @@ public class Settings_Manager : MonoBehaviour
 
     public void updateSettings()
     {
+        GameObject.Find("DyslexicToggle").GetComponent<Toggle>().isOn = PlayerPrefs.GetInt("DyslexicFont") == 1;
         if (PlayerPrefs.GetInt("DyslexicFont") == 1)
             foreach (var text in Resources.FindObjectsOfTypeAll<TextMeshProUGUI>())
             {
@@ -101,5 +103,17 @@ public class Settings_Manager : MonoBehaviour
             {
                 text.font = fancyFont;
             }
+    }
+
+    public void setFont(bool dyslexic)
+    {
+        if (GameObject.Find("DyslexicToggle").GetComponent<Toggle>().isOn)
+        {
+            PlayerPrefs.SetInt("DyslexicFont", 1);
+        } else
+        {
+            PlayerPrefs.SetInt("DyslexicFont", 0);
+        }
+        updateSettings();
     }
 }
