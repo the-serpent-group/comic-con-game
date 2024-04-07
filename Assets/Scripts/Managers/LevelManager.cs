@@ -153,6 +153,7 @@ public class LevelManager : MonoBehaviour
     /// </summary>
 
     // Day Progress Functions
+
     public void ProgressDay()
     {
         int nextPhase = ((int)currentPhase) + 1;
@@ -164,7 +165,7 @@ public class LevelManager : MonoBehaviour
         {
             currentPhase = DayPhase.Morning;
             currentLevel++;
-            currentSpawnCount = 4;
+            currentSpawnCount = Mathf.Min(currentSpawnCount + 4, MaxSpawnCount);
         }
         time = 0f;
         if (currentPhase != DayPhase.Morning) startDayButton.SetActive(false);
@@ -177,9 +178,10 @@ public class LevelManager : MonoBehaviour
 
         SetUIText();
         SetUISlider();
-        if (currentPhase == DayPhase.Morning && npcSpawnText != null)
+
+        if (currentPhase == DayPhase.Morning && npcSpawnText != null) //npc spawn update
         {
-            npcSpawnText.text = "NPCs to Spawn Today: " + currentSpawnCount.ToString();
+            npcSpawnText.text = "NPCs to Spawn Today: " + currentSpawnCount;
         }
     }
 
@@ -194,9 +196,9 @@ public class LevelManager : MonoBehaviour
         if (currentPhase == DayPhase.Noon)
         {
             int npcsToSpawnToday = Mathf.Min(currentSpawnCount, MaxSpawnCount);
-            int npcsSpawnedToday = 0; 
+            int npcsSpawnedToday = 0;
 
-            for (int i = 0; i < npcsToSpawnToday; i++)
+            for (int i = 0; i < currentSpawnCount; i++)
             {
                 Transform spawnPoint = (i % 2 == 0) ? leftRoadSpawnPoint : rightRoadSpawnPoint;
                 GameObject npcObject = Instantiate(npcPrefab, spawnPoint.position, Quaternion.identity);
@@ -225,8 +227,8 @@ public class LevelManager : MonoBehaviour
                     Debug.LogError("NPCBehavior component not found on the spawned NPC.");
                 }
             }
-            npcSpawnText.text = $"NPCs to Spawn Today: {npcsSpawnedToday}";
-            Debug.Log($"NPCs spawned today: {npcsSpawnedToday}");
+            npcSpawnText.text = "NPCs to Spawn Today: " + currentSpawnCount;
+            Debug.Log($"NPCs spawned today: {currentSpawnCount}");
         }
     }
 
