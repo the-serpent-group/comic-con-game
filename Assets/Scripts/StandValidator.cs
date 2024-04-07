@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
 
 public class StandValidator : MonoBehaviour
@@ -9,21 +10,21 @@ public class StandValidator : MonoBehaviour
 
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
-    
+
     public string generateLocationString()
     {
         Vector3 pos = transform.position;
-        pos.x = (int) pos.x;
-        pos.y = (int) pos.y;
-        pos.z = (int) pos.z;
+        pos.x = (int)pos.x;
+        pos.y = (int)pos.y;
+        pos.z = (int)pos.z;
         locationString = $"x[{pos.x}]&y[{pos.y}]&z[{pos.z}]";
         return locationString;
     }
@@ -37,3 +38,4 @@ public class StandValidator : MonoBehaviour
     }
 
 }
+

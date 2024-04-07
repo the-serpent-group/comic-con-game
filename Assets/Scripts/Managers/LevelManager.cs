@@ -6,15 +6,22 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
+using Aoiti.Pathfinding;
+
 
 public class LevelManager : MonoBehaviour
 {
+    [SerializeField]
+    private TextMeshProUGUI npcSpawnText;
+
     // Do. Not. Touch. My. Code. Until. The. Refactoring. Stage.
     // Adapt to the fucking code - use your time wisely.
     // I know my code is mid at best.
     // But the shit Ernie did to my code is stupid and unnecessary without a working product.
     // And I would know, a dude got fired specifically for that in my job.
     // - Eric
+
+    // - Ernest its okay my ai is abit shit but its what it is for now. 
 
     private enum DayPhase
     {
@@ -59,6 +66,10 @@ public class LevelManager : MonoBehaviour
     int currentLevel = 0;
     private float time = 0f;
 
+    //NPC SPAWN MIN - MAX
+    private int currentSpawnCount = 4;
+    private const int MaxSpawnCount = 40;
+
 
     // UI Elements
     [SerializeField]
@@ -68,7 +79,15 @@ public class LevelManager : MonoBehaviour
     Image UIDayProgressSliderBackground;
     Image UIDayProgressSliderFill;
 
+    //centre initally for making sure AI moved towards centre -ernest 
+    public Transform centerPoint;
 
+    // reference spawn points
+    public Transform leftRoadSpawnPoint;
+    public Transform rightRoadSpawnPoint;
+
+    //npc being spawned 
+    public GameObject npcPrefab;
 
     void Start()
     {
@@ -116,7 +135,18 @@ public class LevelManager : MonoBehaviour
         globalLight.shapeLightFalloffSize = resLightSettings.y;
 
         if (progressToNext == true) ProgressDay();
+
+        // next day
+        if (progressToNext)
+        {
+            ProgressDay();
+            if (currentPhase == DayPhase.Noon)
+            {
+                StartDay();
+            }
+        }
     }
+
 
     // Day Progress Functions
     public void ProgressDay()
@@ -128,8 +158,12 @@ public class LevelManager : MonoBehaviour
         }
         else
         {
+            // Reset to morning and increment the day
             currentPhase = DayPhase.Morning;
             currentLevel++;
+
+            // Reset spawn count for the new day
+            currentSpawnCount = 4;
         }
         time = 0f;
         if (currentPhase != DayPhase.Morning) startDayButton.SetActive(false);
@@ -142,31 +176,97 @@ public class LevelManager : MonoBehaviour
 
         SetUIText();
         SetUISlider();
-    }
 
+        // If it's time to start the day, reset the spawn text for the new day
+        if (currentPhase == DayPhase.Morning && npcSpawnText != null)
+        {
+            npcSpawnText.text = "NPCs to Spawn Today: " + currentSpawnCount.ToString();
+        }
+    }
 
     // Button functions
     GameObject startDayButton;
     public void StartDay()
     {
         if (currentPhase != DayPhase.Morning) return;
-        ProgressDay();
-        // Call any start day functionality here.
+
+        ProgressDay(); // This will progress the day and check if we need to spawn NPCs
+
+        //spawning NPC section  
+
+        //spawn during noon 
+        if (currentPhase == DayPhase.Noon)
+        {
+
+            int npcsToSpawnToday = currentSpawnCount; //set local npc int to current spawn amount for current day incremented  - ernest aka erndiggitydog  
+            currentSpawnCount = Mathf.Min(currentSpawnCount + 4, MaxSpawnCount);
+
+
+            // Spawn gathering so we have a total of both left and right spawned today
+            int npcsToSpawnLeft = npcsToSpawnToday / 2; // total / 2 
+            int npcsToSpawnRight = npcsToSpawnToday - npcsToSpawnLeft; // incase the spawn amount is not even deduct spawn amount from left - day
+            for (int i = 0; i < npcsToSpawnLeft; i++)
+            {
+                GameObject npc = Instantiate(npcPrefab, leftRoadSpawnPoint.position, Quaternion.identity);
+                SetNpcTarget(npc);
+            }
+            for (int i = 0; i < npcsToSpawnRight; i++)
+            {
+                GameObject npc = Instantiate(npcPrefab, rightRoadSpawnPoint.position, Quaternion.identity);
+                SetNpcTarget(npc);
+            }
+            if (npcSpawnText != null)
+            {
+                npcSpawnText.text = $"NPCs Spawned: {npcsToSpawnToday}";
+            }                                                                                   //UI NPC Count
+            else
+            {
+                Debug.LogWarning("NPC Spawn Text UI element not assigned!");
+            }
+        }
     }
 
+
+
+
+    private void SetNpcTarget(GameObject npc)
+    {
+        MovementController2D movementController = npc.GetComponent<MovementController2D>();
+        if (movementController != null)
+        {
+            if (centerPoint != null)
+            {
+                movementController.SetTarget(centerPoint.position);
+            }
+            else
+            {
+                Debug.LogError("Center point not assigned in the LevelManager.");
+            }
+        }
+        else
+        {
+            Debug.LogError("MovementController2D component missing on the spawned NPC.");
+        }
+    }
+
+
+
     GameObject endDayButton;
+    /// <summary>
+    /// END OF THE DAY SECTION
+    /// </summary>
     public void EndDay()
     {
         if (currentPhase != DayPhase.Night) return;
         ProgressDay();
-        // Call any end day functionality here.
     }
 
-
-    // UI Management
+    /// <summary>
+    /// UI MANAGEMENT 
+    /// </summary>
     private void SetUIText()
     {
-        UICounterText.text = $"Day {currentLevel.ToString().PadLeft(3,'_')} - {(currentPhase)}";
+        UICounterText.text = $"Day {currentLevel.ToString().PadLeft(3, '_')} - {(currentPhase)}";
     }
 
     private void SetUISlider()
@@ -204,3 +304,4 @@ public class LevelManager : MonoBehaviour
 
     }
 }
+
