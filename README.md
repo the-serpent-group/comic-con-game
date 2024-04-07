@@ -14,7 +14,8 @@ As a group we have been specific with this concept, to-which we have brought int
 The game needs players to continually obtain money which with the economics mechanic allows for turn over profits and revenue and losses to which is tracked and presented to each player after the end of each working day, however if the players cant keep customers happy through having a constant stock of demanded items then the players will lose the game. This allows for players to get a sense of organisational skills which comes highly into ADHD managament for example when trying to time manage and organise and plan daily life, which for jobs which attract greater ranges of diversity and uniqueness would be highly valuable and possibly increase real world user productivity. 
 
 ---
-~~ Neurologically thought has been brought into how players could react though stimuli ..... ~~
+~~Neurologically thought has been brought into how players could react though stimuli .....~~
+
 Accesibility Options:
 - Dyslexia Friendly Font.
 
