@@ -344,6 +344,7 @@ public class LevelManager : MonoBehaviour
     {
         if (CurrentPhase != DayPhase.Night) return;
         ProgressDay();
+        
         if (MaxSpawnCount - happyCustomersCount > unhappyCustomerThreshold)
         {
             playerHealth -= 10; // health decrements by 10 
@@ -353,6 +354,9 @@ public class LevelManager : MonoBehaviour
             {
                 Debug.Log("End of scene");
             }
+        } else
+        {
+            GameObject.Find("GridManager").GetComponent<GridManager>().upgradeMap();
         }
     }
 
