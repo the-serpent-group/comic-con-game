@@ -25,7 +25,7 @@ public class LevelManager : MonoBehaviour
 
     // - Ernest its okay my ai is abit shit but its what it is for now. 
 
-    private enum DayPhase
+    public enum DayPhase
     {
         Morning = 0,    // Preparation Phase
         Noon = 1,       // Customers Enter
@@ -64,7 +64,7 @@ public class LevelManager : MonoBehaviour
     Vector2 previousGlobalLightSettings;
 
     // Vars
-    DayPhase currentPhase = DayPhase.Morning;
+    public DayPhase currentPhase = DayPhase.Morning;
     int currentLevel = 0;
     private float time = 0f;
 
