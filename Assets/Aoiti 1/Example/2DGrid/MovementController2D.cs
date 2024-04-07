@@ -238,18 +238,26 @@ public class MovementController2D : MonoBehaviour
                 }
             }
 
+            // on reach condition 
             if ((Vector2)transform.position == targetPosition)
             {
                 pathLeftToGo.RemoveAt(0);
                 if (pathLeftToGo.Count == 0)
                 {
+                    // bool stop moving now false
                     isMoving = false;
+                    // notifing the NPC has reached its target
+                    NPCBehavior npcBehavior = GetComponent<NPCBehavior>();
+                    if (npcBehavior != null)
+                    {
+                        npcBehavior.OnReachedTargetStand(); // call unity event. 
+                    }
                 }
             }
 
             if (pathLeftToGo.Count > 0)
             {
-                Vector2 directionToNextPoint = (pathLeftToGo[0] - (Vector2)transform.position).normalized;
+                Vector2 directionToNextPoint = (pathLeftToGo[0] - (Vector2)transform.position).normalized; 
                 currentVelocity = directionToNextPoint * speed;
             }
             else

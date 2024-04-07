@@ -16,7 +16,7 @@ public class ScoreManager : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (levelManager.currentPhase != LevelManager.DayPhase.Morning && levelManager.currentPhase != LevelManager.DayPhase.Night)
+        if (levelManager.CurrentPhase != DayPhase.Morning && levelManager.CurrentPhase != DayPhase.Night)
         {
             score += 1; //per update = per frame +1 . score += fps. (universal portability) fps annd performance plays a role in this.
             scoreText.text = score.ToString(); //updates the ui

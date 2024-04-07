@@ -8,10 +8,17 @@ using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 using Aoiti.Pathfinding;
 
+public enum DayPhase
+{
+    Morning, // Preparation Phase
+    Noon,    // Customers Enter
+    Evening, // Customers Leave
+    Night    // Day Summary
+}
 
 public class LevelManager : MonoBehaviour
 {
-    public StandManager standManager; 
+    public StandManager standManager;
 
     [SerializeField]
     private TextMeshProUGUI npcSpawnText;
@@ -23,15 +30,7 @@ public class LevelManager : MonoBehaviour
     // And I would know, a dude got fired specifically for that in my job.
     // - Eric
 
-    // - Ernest its okay my ai is abit shit but its what it is for now. 
-
-    public enum DayPhase
-    {
-        Morning = 0,    // Preparation Phase
-        Noon = 1,       // Customers Enter
-        Evening = 2,    // Customers Leave
-        Night = 3       // Day Summary
-    }
+    // - Ernest its okay my ai is finished but thank you for the constructive criticism i guess  0 s 0. 
 
     // Presets
 
@@ -64,14 +63,20 @@ public class LevelManager : MonoBehaviour
     Vector2 previousGlobalLightSettings;
 
     // Vars
-    public DayPhase currentPhase = DayPhase.Morning;
+    private DayPhase _currentPhase = DayPhase.Morning;
+    public DayPhase CurrentPhase
+    {
+        get { return _currentPhase; }
+        private set { _currentPhase = value; }
+    }
     int currentLevel = 0;
     private float time = 0f;
 
     //NPC SPAWN MIN - MAX
     private int currentSpawnCount = 4;
     private const int MaxSpawnCount = 40;
-
+    public TextMeshProUGUI happyCustomersCounterText;
+    private int happyCustomersCount = 0;
 
     // UI Elements
     [SerializeField]
@@ -91,8 +96,18 @@ public class LevelManager : MonoBehaviour
     //npc being spawned 
     public GameObject npcPrefab;
 
+    public TextMeshProUGUI playerHealthText;
+    private int playerHealth = 100; 
+    private int unhappyCustomerThreshold = 10; 
+
     void Start()
     {
+        //ternary debug check for counter check (dedudant now) - ernest. 
+        Debug.Log(happyCustomersCounterText != null ? "Happy Customers Counter Text is assigned" : "Happy Customers Counter Text is NOT assigned");
+        UpdateHappyCustomersUI();
+
+
+        ///Find components and GUI and Image etc
         UICounterText = GameObject.Find("LevelCounter_Text").GetComponent<TextMeshProUGUI>();
         UIDayProgressSlider = GameObject.Find("LevelCounter_Progress").GetComponent<Slider>();
         UIDayProgressField = GameObject.Find("ProgressValueField").GetComponent<TextMeshProUGUI>();
@@ -100,10 +115,10 @@ public class LevelManager : MonoBehaviour
         UIDayProgressSliderFill = GameObject.Find("LevelCounter_Fill").GetComponent<Image>();
         globalLight = GameObject.Find("WorldLight").GetComponent<Light2D>();
         startDayButton = GameObject.Find("ButtonStartDay");
-        endDayButton = GameObject.Find("ButtonEndDay");
-        endDayButton.SetActive(false);
+        endDayButton = GameObject.Find("ButtonEndDay"); 
+        endDayButton.SetActive(false); //set end of day button to false.
 
-        UICounterText.text = $"Day {currentLevel} - {(currentPhase)}";
+        UICounterText.text = $"Day {currentLevel} - {(CurrentPhase)}";
 
         float sumOfTime = 0f;
         for (int i = 0; i < DayPhaseDurations.Length; i++) if (DayPhaseDurations[i] >= 0) sumOfTime += DayPhaseDurations[i];
@@ -114,6 +129,27 @@ public class LevelManager : MonoBehaviour
 
         SetUIText();
         SetUISlider();
+        //find the happyCustomer Textmeshpro gui which is attached to the game object LevelManager from the given field- ernest.
+        happyCustomersCounterText = GameObject.Find("happyCustomersCounterText").GetComponent<TextMeshProUGUI>();
+        if (happyCustomersCounterText != null)
+        {
+            UpdateHappyCustomersUI(); //call update ui customer function. 
+        }
+        else
+        {
+            Debug.LogError("happyCustomersCounterText is not assigned.");
+        }
+
+        playerHealthText = GameObject.Find("PlayerHealth").GetComponent<TextMeshProUGUI>();
+        if (playerHealthText != null)
+        {
+            playerHealthText.text = $"{playerHealth}"; // just prints out numerical value for player health. after getting the ui component from the game object.
+        }
+        else
+        {
+            Debug.LogError("PlayerHealth Text is not assigned.");
+        }
+
     }
 
     // Update is called once per frame
@@ -132,7 +168,7 @@ public class LevelManager : MonoBehaviour
         // For Lighting Calculations
         if (ratio < 0f) ratio = time / 1f;
         ratio = Mathf.Clamp(ratio, 0f, 1f);
-        Vector2 resLightSettings = Vector2.Lerp(previousGlobalLightSettings, globalLightSettings[(int)currentPhase], ratio);
+        Vector2 resLightSettings = Vector2.Lerp(previousGlobalLightSettings, globalLightSettings[(int)CurrentPhase], ratio); //lerping
         globalLight.falloffIntensity = resLightSettings.x;
         globalLight.shapeLightFalloffSize = resLightSettings.y;
 
@@ -142,7 +178,7 @@ public class LevelManager : MonoBehaviour
         if (progressToNext)
         {
             ProgressDay();
-            if (currentPhase == DayPhase.Noon)
+            if (CurrentPhase == DayPhase.Noon)
             {
                 StartDay();
             }
@@ -153,25 +189,24 @@ public class LevelManager : MonoBehaviour
     /// </summary>
 
     // Day Progress Functions
-
     public void ProgressDay()
     {
-        int nextPhase = ((int)currentPhase) + 1;
+        int nextPhase = ((int)CurrentPhase) + 1;
         if (Enum.IsDefined(typeof(DayPhase), nextPhase))
         {
-            currentPhase = (DayPhase)nextPhase;
+            CurrentPhase = (DayPhase)nextPhase;
         }
         else
         {
-            currentPhase = DayPhase.Morning;
+            CurrentPhase = DayPhase.Morning;
             currentLevel++;
             currentSpawnCount = Mathf.Min(currentSpawnCount + 4, MaxSpawnCount);
         }
         time = 0f;
-        if (currentPhase != DayPhase.Morning) startDayButton.SetActive(false);
+        if (CurrentPhase != DayPhase.Morning) startDayButton.SetActive(false);
         else startDayButton.SetActive(true);
 
-        if (currentPhase != DayPhase.Night) endDayButton.SetActive(false);
+        if (CurrentPhase != DayPhase.Night) endDayButton.SetActive(false);
         else endDayButton.SetActive(true);
 
         previousGlobalLightSettings = new Vector2(globalLight.falloffIntensity, globalLight.shapeLightFalloffSize);
@@ -179,7 +214,7 @@ public class LevelManager : MonoBehaviour
         SetUIText();
         SetUISlider();
 
-        if (currentPhase == DayPhase.Morning && npcSpawnText != null) //npc spawn update
+        if (CurrentPhase == DayPhase.Morning && npcSpawnText != null) //npc spawn update
         {
             npcSpawnText.text = "NPCs to Spawn Today: " + currentSpawnCount;
         }
@@ -189,20 +224,18 @@ public class LevelManager : MonoBehaviour
     GameObject startDayButton;
     public void StartDay()
     {
-        if (currentPhase != DayPhase.Morning) return;
+        if (CurrentPhase != DayPhase.Morning) return;
 
         ProgressDay();
 
-        if (currentPhase == DayPhase.Noon)
+        if (CurrentPhase == DayPhase.Noon)
         {
             int npcsToSpawnToday = Mathf.Min(currentSpawnCount, MaxSpawnCount);
-            int npcsSpawnedToday = 0;
 
-            for (int i = 0; i < currentSpawnCount; i++)
+            for (int i = 0; i < npcsToSpawnToday; i++)
             {
                 Transform spawnPoint = (i % 2 == 0) ? leftRoadSpawnPoint : rightRoadSpawnPoint;
                 GameObject npcObject = Instantiate(npcPrefab, spawnPoint.position, Quaternion.identity);
-                npcsSpawnedToday++;
 
                 NPCBehavior npcBehavior = npcObject.GetComponent<NPCBehavior>();
                 if (npcBehavior != null)
@@ -215,6 +248,13 @@ public class LevelManager : MonoBehaviour
                     {
                         npcBehavior.SetTargetStand(nearestStand);
                         npcObject.GetComponent<MovementController2D>().SetTarget(nearestStand.transform.position);
+
+                        // npc behavior sub to event. 
+                        npcBehavior.OnReachedTarget.AddListener(() =>
+                        {
+                            npcBehavior.SetHappinessFull(); //setter for npc happiness on event condition. 
+                            Debug.Log($"{npcObject.name} is happy!");
+                        });
                     }
                     else
                     {
@@ -226,12 +266,27 @@ public class LevelManager : MonoBehaviour
                 {
                     Debug.LogError("NPCBehavior component not found on the spawned NPC.");
                 }
+                npcBehavior.OnReachedTarget.AddListener(HandleHappyCustomer);
             }
-            npcSpawnText.text = "NPCs to Spawn Today: " + currentSpawnCount;
-            Debug.Log($"NPCs spawned today: {currentSpawnCount}");
+
+            npcSpawnText.text = "NPCs to Spawn Today: " + npcsToSpawnToday;
         }
     }
 
+    private void HandleHappyCustomer()
+    {
+        happyCustomersCount++;
+        UpdateHappyCustomersUI();
+    }
+
+    private void UpdateHappyCustomersUI()
+    {
+        happyCustomersCounterText.text = $"Happy Customers: {happyCustomersCount}";
+    }
+
+
+
+    //setting npc target using the movement controller ref for having npcs track towards centre. 
     private void SetNpcTarget(GameObject npc)
     {
         MovementController2D movementController = npc.GetComponent<MovementController2D>();
@@ -287,8 +342,18 @@ public class LevelManager : MonoBehaviour
     /// </summary>
     public void EndDay()
     {
-        if (currentPhase != DayPhase.Night) return;
+        if (CurrentPhase != DayPhase.Night) return;
         ProgressDay();
+        if (MaxSpawnCount - happyCustomersCount > unhappyCustomerThreshold)
+        {
+            playerHealth -= 10; // health decrements by 10 
+            playerHealthText.text = $"{playerHealth}"; 
+
+            if (playerHealth <= 0)
+            {
+                Debug.Log("End of scene");
+            }
+        }
     }
 
     /// <summary>
@@ -296,20 +361,20 @@ public class LevelManager : MonoBehaviour
     /// </summary>
     private void SetUIText()
     {
-        UICounterText.text = $"Day {currentLevel.ToString().PadLeft(3, '_')} - {(currentPhase)}";
+        UICounterText.text = $"Day {currentLevel.ToString().PadLeft(3, '_')} - {(CurrentPhase)}";
     }
 
     private void SetUISlider()
     {
-        UIDayProgressSliderBackground.sprite = DayPhaseSliderBackground[(int)currentPhase];
-        UIDayProgressSliderFill.color = DayPhaseFillerColors[(int)currentPhase];
+        UIDayProgressSliderBackground.sprite = DayPhaseSliderBackground[(int)CurrentPhase];
+        UIDayProgressSliderFill.color = DayPhaseFillerColors[(int)CurrentPhase];
     }
 
     private float UpdateUISlider()
     {
-        float ratio = time / DayPhaseDurations[(int)currentPhase];
+        float ratio = time / DayPhaseDurations[(int)CurrentPhase];
 
-        switch (currentPhase)
+        switch (CurrentPhase)
         {
             case DayPhase.Night:
             case DayPhase.Morning:
@@ -328,7 +393,7 @@ public class LevelManager : MonoBehaviour
         return ratio;
     }
 
-    // Light Management
+    // Light Management.  not done. 
     private void SetLight()
     {
 

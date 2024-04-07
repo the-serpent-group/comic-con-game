@@ -803,7 +803,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 166fd628f7cc70b4dab680b0842cafe7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  standCategory: 
 --- !u!212 &2210559728018878215
 SpriteRenderer:
   m_ObjectHideFlags: 0
