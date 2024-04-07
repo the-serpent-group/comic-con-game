@@ -11,7 +11,7 @@ using Aoiti.Pathfinding;
 
 public class LevelManager : MonoBehaviour
 {
-    public StandManager standManager; // Assign this in the Inspector or find it dynamically in Start()
+    public StandManager standManager; 
 
     [SerializeField]
     private TextMeshProUGUI npcSpawnText;
@@ -189,17 +189,18 @@ public class LevelManager : MonoBehaviour
     {
         if (currentPhase != DayPhase.Morning) return;
 
-        ProgressDay(); 
+        ProgressDay();
 
         if (currentPhase == DayPhase.Noon)
         {
             int npcsToSpawnToday = Mathf.Min(currentSpawnCount, MaxSpawnCount);
-            currentSpawnCount += 4; // spawn cycle
+            int npcsSpawnedToday = 0; 
 
             for (int i = 0; i < npcsToSpawnToday; i++)
             {
                 Transform spawnPoint = (i % 2 == 0) ? leftRoadSpawnPoint : rightRoadSpawnPoint;
                 GameObject npcObject = Instantiate(npcPrefab, spawnPoint.position, Quaternion.identity);
+                npcsSpawnedToday++;
 
                 NPCBehavior npcBehavior = npcObject.GetComponent<NPCBehavior>();
                 if (npcBehavior != null)
@@ -224,6 +225,8 @@ public class LevelManager : MonoBehaviour
                     Debug.LogError("NPCBehavior component not found on the spawned NPC.");
                 }
             }
+            npcSpawnText.text = $"NPCs to Spawn Today: {npcsSpawnedToday}";
+            Debug.Log($"NPCs spawned today: {npcsSpawnedToday}");
         }
     }
 
