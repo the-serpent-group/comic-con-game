@@ -74,6 +74,7 @@ public class MainMenuTransitions : MonoBehaviour
                 {
                     fadeoutFinished = true;
                     Destroy(fadeawayObject);
+                    settings.updateSettings();
                 }
             }
             else

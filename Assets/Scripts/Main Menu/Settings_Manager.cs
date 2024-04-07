@@ -25,13 +25,13 @@ public class Settings_Manager : MonoBehaviour
         else
         {
             finishedSetup = true;
+            updateSettings();
         }
         int settingSet = PlayerPrefs.GetInt("SettingSet", -1);
         if (settingSet != -1)
         {
             Destroy(dyslexiaSettings);
             finishedSetup = true;
-            updateSettings();
         }
         else
         {
@@ -89,7 +89,7 @@ public class Settings_Manager : MonoBehaviour
 
     }
 
-    void updateSettings()
+    public void updateSettings()
     {
         if (PlayerPrefs.GetInt("DyslexicFont") == 1)
             foreach (var text in Resources.FindObjectsOfTypeAll<TextMeshProUGUI>())
