@@ -18,6 +18,7 @@ public enum StandCategory
 
 public class StandManager : MonoBehaviour
 {
+
     public static event Action<GameObject> OnStandPlaced;
     [SerializeField]
     Color c_Art = new Color(128f / 255f, 0f / 255f, 128f / 255f);

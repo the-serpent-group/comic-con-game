@@ -1101,6 +1101,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05b3b6d511d37d3408e47e1a9dc4bdf7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  standManager: {fileID: 537131221}
   npcSpawnText: {fileID: 1455644215}
   DayPhaseDurations: ffffffff0c00000004000000ffffffff
   DayPhaseFillerColors:

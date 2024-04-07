@@ -11,6 +11,8 @@ using Aoiti.Pathfinding;
 
 public class LevelManager : MonoBehaviour
 {
+    public StandManager standManager; // Assign this in the Inspector or find it dynamically in Start()
+
     [SerializeField]
     private TextMeshProUGUI npcSpawnText;
 
@@ -146,7 +148,9 @@ public class LevelManager : MonoBehaviour
             }
         }
     }
-
+    /// <summary>
+    /// NPC SPAWN STUFF
+    /// </summary>
 
     // Day Progress Functions
     public void ProgressDay()
@@ -158,11 +162,8 @@ public class LevelManager : MonoBehaviour
         }
         else
         {
-            // Reset to morning and increment the day
             currentPhase = DayPhase.Morning;
             currentLevel++;
-
-            // Reset spawn count for the new day
             currentSpawnCount = 4;
         }
         time = 0f;
@@ -176,8 +177,6 @@ public class LevelManager : MonoBehaviour
 
         SetUIText();
         SetUISlider();
-
-        // If it's time to start the day, reset the spawn text for the new day
         if (currentPhase == DayPhase.Morning && npcSpawnText != null)
         {
             npcSpawnText.text = "NPCs to Spawn Today: " + currentSpawnCount.ToString();
@@ -190,44 +189,43 @@ public class LevelManager : MonoBehaviour
     {
         if (currentPhase != DayPhase.Morning) return;
 
-        ProgressDay(); // This will progress the day and check if we need to spawn NPCs
+        ProgressDay(); 
 
-        //spawning NPC section  
-
-        //spawn during noon 
         if (currentPhase == DayPhase.Noon)
         {
+            int npcsToSpawnToday = Mathf.Min(currentSpawnCount, MaxSpawnCount);
+            currentSpawnCount += 4; // spawn cycle
 
-            int npcsToSpawnToday = currentSpawnCount; //set local npc int to current spawn amount for current day incremented  - ernest aka erndiggitydog  
-            currentSpawnCount = Mathf.Min(currentSpawnCount + 4, MaxSpawnCount);
+            for (int i = 0; i < npcsToSpawnToday; i++)
+            {
+                Transform spawnPoint = (i % 2 == 0) ? leftRoadSpawnPoint : rightRoadSpawnPoint;
+                GameObject npcObject = Instantiate(npcPrefab, spawnPoint.position, Quaternion.identity);
 
+                NPCBehavior npcBehavior = npcObject.GetComponent<NPCBehavior>();
+                if (npcBehavior != null)
+                {
+                    StandCategory wantedCategory = DetermineNPCWantedCategory();
+                    npcBehavior.SetWantedCategory(wantedCategory);
 
-            // Spawn gathering so we have a total of both left and right spawned today
-            int npcsToSpawnLeft = npcsToSpawnToday / 2; // total / 2 
-            int npcsToSpawnRight = npcsToSpawnToday - npcsToSpawnLeft; // incase the spawn amount is not even deduct spawn amount from left - day
-            for (int i = 0; i < npcsToSpawnLeft; i++)
-            {
-                GameObject npc = Instantiate(npcPrefab, leftRoadSpawnPoint.position, Quaternion.identity);
-                SetNpcTarget(npc);
-            }
-            for (int i = 0; i < npcsToSpawnRight; i++)
-            {
-                GameObject npc = Instantiate(npcPrefab, rightRoadSpawnPoint.position, Quaternion.identity);
-                SetNpcTarget(npc);
-            }
-            if (npcSpawnText != null)
-            {
-                npcSpawnText.text = $"NPCs Spawned: {npcsToSpawnToday}";
-            }                                                                                   //UI NPC Count
-            else
-            {
-                Debug.LogWarning("NPC Spawn Text UI element not assigned!");
+                    StandController nearestStand = FindNearestStandOfferingCategory(wantedCategory, npcObject.transform.position);
+                    if (nearestStand != null)
+                    {
+                        npcBehavior.SetTargetStand(nearestStand);
+                        npcObject.GetComponent<MovementController2D>().SetTarget(nearestStand.transform.position);
+                    }
+                    else
+                    {
+                        Debug.LogWarning("No stand found for category: " + wantedCategory.ToString());
+                    }
+                    npcBehavior.DebugWantedCategoryAndTargetStand();
+                }
+                else
+                {
+                    Debug.LogError("NPCBehavior component not found on the spawned NPC.");
+                }
             }
         }
     }
-
-
-
 
     private void SetNpcTarget(GameObject npc)
     {
@@ -249,6 +247,33 @@ public class LevelManager : MonoBehaviour
         }
     }
 
+    StandCategory DetermineNPCWantedCategory()
+    {
+        var values = System.Enum.GetValues(typeof(StandCategory));
+        return (StandCategory)values.GetValue(UnityEngine.Random.Range(0, values.Length));
+    }
+
+    StandController FindNearestStandOfferingCategory(StandCategory category, Vector2 npcPosition)
+    {
+        float closestDistance = float.MaxValue;
+        StandController closestStand = null;
+
+        foreach (GameObject standObj in standManager.possibleStandList)
+        {
+            StandController standController = standObj.GetComponent<StandController>();
+            if (standController != null && standController.Category == category)
+            {
+                float distance = Vector2.Distance(npcPosition, standObj.transform.position);
+                if (distance < closestDistance)
+                {
+                    closestDistance = distance;
+                    closestStand = standController;
+                }
+            }
+        }
+
+        return closestStand;
+    }
 
 
     GameObject endDayButton;
