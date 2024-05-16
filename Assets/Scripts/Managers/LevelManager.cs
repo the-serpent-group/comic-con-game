@@ -10,10 +10,9 @@ using UnityEngine.UI;
 public class LevelManager : MonoBehaviour
 {
     // Do. Not. Touch. My. Code. Until. The. Refactoring. Stage.
-    // Adapt to the fucking code - use your time wisely.
+    // Adapt to the code - use your time wisely.
     // I know my code is mid at best.
-    // But the shit Ernie did to my code is stupid and unnecessary without a working product.
-    // And I would know, a dude got fired specifically for that in my job.
+    // But the things Ernie did to my code is unnecessary without a working product.
     // - Eric
 
     private enum DayPhase
